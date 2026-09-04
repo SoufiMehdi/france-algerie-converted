@@ -1,0 +1,131 @@
+.voyage-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.voyage-list-header h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.voyages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Voyage Card ─────────────────────────────────────── */
+.voyage-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.voyage-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+}
+
+.voyage-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.voyage-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.voyage-flag { font-size: 2rem; line-height: 1; }
+.voyage-flag-lg { font-size: 2.5rem; line-height: 1; }
+
+.voyage-card-title h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.voyage-date {
+  font-size: 0.8rem;
+  color: var(--text-lighter);
+}
+
+.voyage-card-settings {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.voyage-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.stat-profit .stat-value { color: var(--success); }
+
+.stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-lighter);
+  font-weight: 500;
+}
+
+.voyage-card-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  padding-top: 0.25rem;
+}
+
+/* ── Create Voyage Form ──────────────────────────────── */
+.create-voyage-card {
+  background: var(--card-bg);
+  border: 2px solid var(--primary-light);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.create-voyage-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.voyage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .voyages-grid { grid-template-columns: 1fr; }
+  .voyage-list-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}

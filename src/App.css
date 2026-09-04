@@ -1,0 +1,8 @@
+/* This file intentionally left empty.
+   Styles have been split into:
+   - src/styles/layout.css      (app shell, header, footer, main)
+   - src/styles/voyage-list.css (VoyageCard, CreateVoyageForm)
+   - src/styles/voyage-detail.css (detail header, settings)
+   - src/styles/products.css    (ProductCard, ProductForm, ProductSummary)
+   - src/styles/ui.css          (buttons, inputs, badges, empty state)
+*/
