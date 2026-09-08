@@ -4,6 +4,7 @@ import VoyageList from './components/VoyageList'
 import VoyageDetail from './components/VoyageDetail'
 import Storefront from './components/Storefront'
 import StoreSettings from './components/StoreSettings'
+import LoginPage from './components/LoginPage'
 import { DEFAULT_STORE_NAME, DEFAULT_STORE_DESCRIPTION, DEFAULT_WHATSAPP_NUMBER } from './constants'
 import './styles/layout.css'
 import './styles/storefront.css'
@@ -23,7 +24,10 @@ export default function App() {
     storeDescription: DEFAULT_STORE_DESCRIPTION,
     whatsappNumber: DEFAULT_WHATSAPP_NUMBER,
   })
-  const [showStoreSettings, setShowStoreSettings] = useState(false)
+  const [adminTab, setAdminTab] = useState('voyages')
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('france-algerie-auth') === 'true'
+  })
 
   // Read initial route from URL hash
   const [page, setPage] = useState(() => {
@@ -91,6 +95,16 @@ export default function App() {
   const goBack = () => setView({ page: 'list', voyageId: null })
   const currentVoyage = voyages.find((v) => v.id === view.voyageId)
 
+  const handleLogin = () => {
+    localStorage.setItem('france-algerie-auth', 'true')
+    setIsAuthenticated(true)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('france-algerie-auth')
+    setIsAuthenticated(false)
+  }
+
   // ── PUBLIC: Storefront ───────────────────────────────────────
   if (page === 'boutique') {
     return (
@@ -104,11 +118,15 @@ export default function App() {
   }
 
   // ── ADMIN: Calculator ────────────────────────────────────────
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />
+  }
+
   return (
     <div className="app">
       <header className="header">
         <div className="header-content">
-          {view.page === 'detail' && (
+          {adminTab === 'voyages' && view.page === 'detail' && (
             <button onClick={goBack} className="btn-back">← Retour</button>
           )}
           <h1>🇫🇷 ➜ 🇩🇿 France → Algérie</h1>
@@ -117,34 +135,51 @@ export default function App() {
             <button onClick={() => setPage('boutique')} className="btn btn-store">
               🏪 Voir la boutique
             </button>
-            <button onClick={() => setShowStoreSettings(!showStoreSettings)} className="btn btn-store-secondary">
-              ⚙️ Boutique
+            <button onClick={handleLogout} className="btn btn-logout">
+              🚪 Déconnexion
             </button>
           </div>
         </div>
       </header>
 
       <main className="main">
-        {showStoreSettings && (
-          <StoreSettings settings={storeSettings} onSave={(s) => { setStoreSettings(s); setShowStoreSettings(false) }} />
+        <div className="admin-tabs">
+          <button
+            className={`admin-tab ${adminTab === 'voyages' ? 'admin-tab-active' : ''}`}
+            onClick={() => { setAdminTab('voyages'); goBack() }}
+          >
+            🧳 Voyages
+          </button>
+          <button
+            className={`admin-tab ${adminTab === 'boutique' ? 'admin-tab-active' : ''}`}
+            onClick={() => setAdminTab('boutique')}
+          >
+            🏪 Boutique
+          </button>
+        </div>
+
+        {adminTab === 'voyages' && (
+          view.page === 'list' ? (
+            <VoyageList
+              voyages={voyages}
+              onAdd={addVoyage}
+              onRemove={removeVoyage}
+              onOpen={openVoyage}
+            />
+          ) : (
+            currentVoyage && (
+              <VoyageDetail
+                voyage={currentVoyage}
+                onAddProduct={addProduct}
+                onRemoveProduct={removeProduct}
+                onUpdateVoyage={updateVoyage}
+              />
+            )
+          )
         )}
 
-        {view.page === 'list' ? (
-          <VoyageList
-            voyages={voyages}
-            onAdd={addVoyage}
-            onRemove={removeVoyage}
-            onOpen={openVoyage}
-          />
-        ) : (
-          currentVoyage && (
-            <VoyageDetail
-              voyage={currentVoyage}
-              onAddProduct={addProduct}
-              onRemoveProduct={removeProduct}
-              onUpdateVoyage={updateVoyage}
-            />
-          )
+        {adminTab === 'boutique' && (
+          <StoreSettings settings={storeSettings} onSave={setStoreSettings} />
         )}
       </main>
 
