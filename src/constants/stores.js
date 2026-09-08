@@ -1,5 +1,5 @@
 /**
- * Store definitions for promo sourcing.
+ * Store definitions.
  * Each store has an id, name, color for UI, and geolocation
  * centered on Beaumont (63) — 10 km radius.
  */
@@ -25,7 +25,6 @@ export const STORES = [
     lat: 45.7789,
     lng: 3.1205,
     address: "Centre Auchan - Rue de l'Industrie, 63100 Clermont-Ferrand",
-    promoUrl: 'https://www.auchan.fr/promotions',
   },
   {
     id: 'aldi',
@@ -34,7 +33,6 @@ export const STORES = [
     lat: 45.7402,
     lng: 3.0672,
     address: 'Aldi - Route de Clermont, 63114 Beaumont',
-    promoUrl: 'https://www.aldi.fr/promotions',
   },
   {
     id: 'leclerc',
@@ -43,7 +41,6 @@ export const STORES = [
     lat: 45.7692,
     lng: 3.1102,
     address: 'E.Leclerc - Place de la République, 63100 Clermont-Ferrand',
-    promoUrl: 'https://www.e-leclerc.com/promotions',
   },
   {
     id: 'yvrochet',
@@ -52,7 +49,6 @@ export const STORES = [
     lat: 45.7510,
     lng: 3.0955,
     address: 'Yvroché - Rue du Commerce, 63114 Beaumont',
-    promoUrl: null, // Local store, no national website
   },
   {
     id: 'action',
@@ -61,7 +57,6 @@ export const STORES = [
     lat: 45.7625,
     lng: 3.0780,
     address: 'Action - Avenue de la République, 63000 Clermont-Ferrand',
-    promoUrl: 'https://www.action.com/fr-fr/promotions/',
   },
   {
     id: 'lidl',
@@ -70,7 +65,6 @@ export const STORES = [
     lat: 45.7835,
     lng: 3.0598,
     address: 'Lidl - Route de Vichy, 63100 Clermont-Ferrand',
-    promoUrl: 'https://www.lidl.fr/p/promotions/s10006544',
   },
 ]
 
@@ -85,16 +79,3 @@ export function getNearbyStores(stores = STORES) {
   })
 }
 
-// ── Promo categories ──────────────────────────────────────────
-export const PROMO_CATEGORIES = [
-  { id: 'alimentation', label: 'Alimentation', emoji: '🛒' },
-  { id: 'boissons', label: 'Boissons', emoji: '🥤' },
-  { id: 'frais', label: 'Produits frais', emoji: '🥬' },
-  { id: 'hygiene', label: 'Hygiène', emoji: '🧼' },
-  { id: 'menager', label: 'Ménager', emoji: '🧹' },
-  { id: 'electromenager', label: 'Électroménager', emoji: '🍳' },
-  { id: 'bebe', label: 'Bébé', emoji: '👶' },
-  { id: 'animalerie', label: 'Animalerie', emoji: '🐾' },
-  { id: 'vetements', label: 'Vêtements', emoji: '👕' },
-  { id: 'divers', label: 'Divers', emoji: '📦' },
-]

@@ -4,11 +4,9 @@ import VoyageList from './components/VoyageList'
 import VoyageDetail from './components/VoyageDetail'
 import Storefront from './components/Storefront'
 import StoreSettings from './components/StoreSettings'
-import PromotionsPage from './components/PromotionsPage'
 import { DEFAULT_STORE_NAME, DEFAULT_STORE_DESCRIPTION, DEFAULT_WHATSAPP_NUMBER } from './constants'
 import './styles/layout.css'
 import './styles/storefront.css'
-import './styles/promotions.css'
 
 /**
  * App root with two modes:
@@ -31,7 +29,6 @@ export default function App() {
   const [page, setPage] = useState(() => {
     const hash = window.location.hash.replace('#', '')
     if (hash === 'boutique') return 'boutique'
-    if (hash === 'promos') return 'promos'
     return 'admin'
   })
 
@@ -45,7 +42,6 @@ export default function App() {
     const onHashChange = () => {
       const hash = window.location.hash.replace('#', '')
       if (hash === 'boutique') setPage('boutique')
-      else if (hash === 'promos') setPage('promos')
       else setPage('admin')
     }
     window.addEventListener('hashchange', onHashChange)
@@ -56,8 +52,6 @@ export default function App() {
   useEffect(() => {
     if (page === 'boutique') {
       document.title = `${storeSettings.storeName} — Boutique`
-    } else if (page === 'promos') {
-      document.title = '🏷️ Promotions — Beaumont (63)'
     } else {
       document.title = 'France → Algérie | Admin'
     }
@@ -109,11 +103,6 @@ export default function App() {
     )
   }
 
-  // ── PUBLIC: Promotions ────────────────────────────────────────
-  if (page === 'promos') {
-    return <PromotionsPage />
-  }
-
   // ── ADMIN: Calculator ────────────────────────────────────────
   return (
     <div className="app">
@@ -127,9 +116,6 @@ export default function App() {
           <div className="header-nav">
             <button onClick={() => setPage('boutique')} className="btn btn-store">
               🏪 Voir la boutique
-            </button>
-            <button onClick={() => setPage('promos')} className="btn btn-promos">
-              🏷️ Promos du quartier
             </button>
             <button onClick={() => setShowStoreSettings(!showStoreSettings)} className="btn btn-store-secondary">
               ⚙️ Boutique

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { STORES, getNearbyStores, BEAUMONT_COORDS, SEARCH_RADIUS_KM, PROMO_CATEGORIES } from '../stores'
+import { STORES, getNearbyStores, BEAUMONT_COORDS, SEARCH_RADIUS_KM } from '../stores'
 
 describe('stores constants', () => {
   describe('STORES', () => {
@@ -43,22 +43,6 @@ describe('stores constants', () => {
     })
   })
 
-  describe('PROMO_CATEGORIES', () => {
-    it('contains expected categories', () => {
-      const ids = PROMO_CATEGORIES.map((c) => c.id)
-      expect(ids).toContain('alimentation')
-      expect(ids).toContain('frais')
-      expect(ids).toContain('hygiene')
-      expect(ids).toContain('menager')
-    })
-
-    it('each category has label and emoji', () => {
-      PROMO_CATEGORIES.forEach((cat) => {
-        expect(cat.label).toBeDefined()
-        expect(cat.emoji).toBeDefined()
-      })
-    })
-  })
 
   describe('constants', () => {
     it('BEAUMONT_COORDS has lat and lng', () => {

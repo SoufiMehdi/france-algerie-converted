@@ -114,23 +114,6 @@ body {
   border-color: rgba(255,255,255,0.5);
 }
 
-.btn-promos {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: 2px solid rgba(255,255,255,0.3);
-  padding: 0.5rem 1.2rem;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-promos:hover {
-  background: linear-gradient(135deg, #5a6fd6, #6a4192);
-  border-color: rgba(255,255,255,0.5);
-}
-
 .btn-store-secondary {
   background: transparent;
   color: white;
