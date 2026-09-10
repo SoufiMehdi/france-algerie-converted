@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useLocalStorage } from './hooks/useLocalStorage'
+import { useFirestore } from './hooks/useFirestore'
+import { auth } from './lib/firebase'
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 import VoyageList from './components/VoyageList'
 import VoyageDetail from './components/VoyageDetail'
 import Storefront from './components/Storefront'
@@ -17,17 +20,25 @@ import './styles/storefront.css'
  * URL hash determines which mode is shown.
  */
 export default function App() {
-  const [voyages, setVoyages] = useLocalStorage('france-algerie-voyages', [])
-  const [view, setView] = useLocalStorage('france-algerie-view', { page: 'list', voyageId: null })
-  const [storeSettings, setStoreSettings] = useLocalStorage('france-algerie-store', {
+  const [voyages, setVoyages] = useFirestore('admin', 'voyages', [])
+  const [view, setView] = useFirestore('admin', 'view', { page: 'list', voyageId: null })
+  const [storeSettings, setStoreSettings] = useFirestore('admin', 'store', {
     storeName: DEFAULT_STORE_NAME,
     storeDescription: DEFAULT_STORE_DESCRIPTION,
     whatsappNumber: DEFAULT_WHATSAPP_NUMBER,
   })
   const [adminTab, setAdminTab] = useState('voyages')
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('france-algerie-auth') === 'true'
-  })
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [loadingAuth, setLoadingAuth] = useState(true)
+
+  // Listen to Firebase Auth state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user)
+      setLoadingAuth(false)
+    })
+    return () => unsubscribe()
+  }, [])
 
   // Read initial route from URL hash
   const [page, setPage] = useState(() => {
@@ -95,14 +106,17 @@ export default function App() {
   const goBack = () => setView({ page: 'list', voyageId: null })
   const currentVoyage = voyages.find((v) => v.id === view.voyageId)
 
-  const handleLogin = () => {
-    localStorage.setItem('france-algerie-auth', 'true')
-    setIsAuthenticated(true)
+  const handleLogin = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+    } catch (error) {
+      console.error('Login error:', error)
+      throw error
+    }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('france-algerie-auth')
-    setIsAuthenticated(false)
+  const handleLogout = async () => {
+    await signOut(auth)
   }
 
   // ── PUBLIC: Storefront ───────────────────────────────────────

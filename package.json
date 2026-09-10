@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "cheerio": "^1.2.0",
+    "firebase": "^12.19.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "uuid": "^14.0.2"
