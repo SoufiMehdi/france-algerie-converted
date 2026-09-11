@@ -1,15 +1,17 @@
+import { useState } from 'react'
 import { CATEGORY_EMOJIS } from '../constants'
 
 /**
  * Public product card for the storefront.
- * Shows photo (or emoji fallback), name, price, description, and WhatsApp order button.
+ * Shows photo (or emoji fallback), name, price, description, and add-to-cart button.
  */
-export default function StoreProductCard({ product, whatsappNumber }) {
-  const handleOrder = () => {
-    const msg = encodeURIComponent(
-      `Bonjour ! Je veux commander :\n\n📦 ${product.name}\n💰 Prix : ${product.sellingPriceDZD.toLocaleString()} DZD\n📦 Qté : ${product.quantity}`,
-    )
-    window.open(`https://wa.me/${whatsappNumber}?text=${msg}`, '_blank')
+export default function StoreProductCard({ product, onAddToCart }) {
+  const [added, setAdded] = useState(false)
+
+  const handleAdd = () => {
+    onAddToCart(product)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1200)
   }
 
   return (
@@ -37,12 +39,13 @@ export default function StoreProductCard({ product, whatsappNumber }) {
         </div>
       </div>
 
-      {/* Order button */}
-      {whatsappNumber && (
-        <button onClick={handleOrder} className="btn-order">
-          🛒 Commander sur WhatsApp
-        </button>
-      )}
+      {/* Add to cart button */}
+      <button
+        onClick={handleAdd}
+        className={`btn-add-cart ${added ? 'btn-added' : ''}`}
+      >
+        {added ? '✓ Ajouté' : '🛒 Ajouter au panier'}
+      </button>
     </div>
   )
 }
