@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
-  collection,
   doc,
-  getDocs,
   setDoc,
   onSnapshot,
 } from 'firebase/firestore'
@@ -43,7 +41,7 @@ export function useFirestore(collectionName, docId, initialValue) {
     )
 
     return () => unsubscribe()
-  }, [collectionName, docId])
+  }, [collectionName, docId, initialValue])
 
   // Update function — saves to Firestore
   const updateValue = (updater) => {

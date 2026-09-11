@@ -31,7 +31,6 @@ export default function ProductForm({ exchangeRate, profitMargin, onSubmit }) {
 
     const priceEUR = parseFloat(formData.priceEUR)
     const qty = parseInt(formData.quantity) || 1
-    const calc = calculatePrices(priceEUR, exchangeRate || DEFAULT_EXCHANGE_RATE, profitMargin || DEFAULT_PROFIT_MARGIN)
 
     onSubmit({
       name: formData.name.trim(),

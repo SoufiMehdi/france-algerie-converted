@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useLocalStorage } from './hooks/useLocalStorage'
 import { useFirestore } from './hooks/useFirestore'
 import { auth } from './lib/firebase'
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
@@ -29,13 +28,11 @@ export default function App() {
   })
   const [adminTab, setAdminTab] = useState('voyages')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [loadingAuth, setLoadingAuth] = useState(true)
 
   // Listen to Firebase Auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsAuthenticated(!!user)
-      setLoadingAuth(false)
     })
     return () => unsubscribe()
   }, [])
