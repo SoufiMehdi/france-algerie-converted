@@ -83,6 +83,74 @@ select.input {
   color: var(--text-light);
 }
 
+/* ── File Upload ─────────────────────────────────────── */
+.input-file {
+  padding: 0.5rem;
+  border: 2px dashed var(--border);
+  background: #f8fafc;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.input-file:hover {
+  border-color: var(--primary-light);
+  background: #f0f4ff;
+}
+
+.input-file::-webkit-file-upload-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.input-file::-webkit-file-upload-button:hover {
+  background: var(--primary-dark);
+}
+
+.photo-preview {
+  position: relative;
+  margin-top: 0.75rem;
+  display: inline-block;
+}
+
+.photo-preview-img {
+  width: 100%;
+  max-width: 220px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+}
+
+.btn-remove-photo {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.2s;
+}
+
+.btn-remove-photo:hover {
+  background: var(--danger, #ef4444);
+}
+
 /* ── Buttons ───────────────────────────────────────────── */
 .btn {
   padding: 0.65rem 1.2rem;
@@ -99,6 +167,13 @@ select.input {
 
 .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 .btn:active { transform: translateY(0); }
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));

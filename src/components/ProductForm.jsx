@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { CATEGORIES, DEFAULT_EXCHANGE_RATE, DEFAULT_PROFIT_MARGIN } from '../constants'
 import { calculatePrices } from '../utils/priceCalculator'
+import { imageToBase64 } from '../utils/uploadImage'
 
 /**
  * Form to add a product to the current voyage.
- * Includes photo URL and description for the storefront.
+ * Includes photo upload and description for the storefront.
  * Shows a live price preview as the user types.
  */
 export default function ProductForm({ exchangeRate, profitMargin, onSubmit }) {
@@ -16,6 +17,10 @@ export default function ProductForm({ exchangeRate, profitMargin, onSubmit }) {
     description: '',
     photoURL: '',
   })
+  const [photoFile, setPhotoFile] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef(null)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -25,24 +30,73 @@ export default function ProductForm({ exchangeRate, profitMargin, onSubmit }) {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handlePhotoChange = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image.')
+      return
+    }
+
+    // Validate file size (max 5 MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("L'image ne doit pas dépasser 5 Mo.")
+      return
+    }
+
+    setPhotoFile(file)
+
+    // Create a local preview
+    const reader = new FileReader()
+    reader.onload = (ev) => setPhotoPreview(ev.target.result)
+    reader.readAsDataURL(file)
+  }
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null)
+    setPhotoPreview(null)
+    setFormData((prev) => ({ ...prev, photoURL: '' }))
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.name || !formData.priceEUR) return
 
-    const priceEUR = parseFloat(formData.priceEUR)
-    const qty = parseInt(formData.quantity) || 1
+    setUploading(true)
+    try {
+      // Convert photo to base64 if one is selected
+      let imageURL = formData.photoURL
+      if (photoFile) {
+        imageURL = await imageToBase64(photoFile)
+      }
 
-    onSubmit({
-      name: formData.name.trim(),
-      priceEUR,
-      quantity: qty,
-      category: formData.category || 'Autre',
-      description: formData.description.trim(),
-      photoURL: formData.photoURL.trim(),
-      dateAdded: new Date().toLocaleDateString('fr-FR'),
-    })
+      const priceEUR = parseFloat(formData.priceEUR)
+      const qty = parseInt(formData.quantity) || 1
 
-    setFormData({ name: '', priceEUR: '', quantity: 1, category: '', description: '', photoURL: '' })
+      onSubmit({
+        name: formData.name.trim(),
+        priceEUR,
+        quantity: qty,
+        category: formData.category || 'Autre',
+        description: formData.description.trim(),
+        photoURL: imageURL,
+        dateAdded: new Date().toLocaleDateString('fr-FR'),
+      })
+
+      // Reset form
+      setFormData({ name: '', priceEUR: '', quantity: 1, category: '', description: '', photoURL: '' })
+      setPhotoFile(null)
+      setPhotoPreview(null)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    } catch (err) {
+      console.error("Erreur lors de l'upload de l'image :", err)
+      alert("Erreur lors de l'upload. Veuillez réessayer.")
+    } finally {
+      setUploading(false)
+    }
   }
 
   const previewPrice =
@@ -119,16 +173,28 @@ export default function ProductForm({ exchangeRate, profitMargin, onSubmit }) {
         {/* Storefront fields */}
         <div className="form-grid-2">
           <div className="form-group">
-            <label htmlFor="pphoto">URL de la photo (optionnel)</label>
+            <label htmlFor="pphoto">Photo du produit (optionnel)</label>
             <input
+              ref={fileInputRef}
               id="pphoto"
-              name="photoURL"
-              type="url"
-              value={formData.photoURL}
-              onChange={handleInputChange}
-              placeholder="https://exemple.com/photo.jpg"
-              className="input"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="input input-file"
             />
+            {photoPreview && (
+              <div className="photo-preview">
+                <img src={photoPreview} alt="Aperçu" className="photo-preview-img" />
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  className="btn-remove-photo"
+                  title="Supprimer la photo"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="pdesc">Description (optionnel)</label>
@@ -144,7 +210,9 @@ export default function ProductForm({ exchangeRate, profitMargin, onSubmit }) {
           </div>
         </div>
 
-        <button type="submit" className="btn btn-primary">Ajouter</button>
+        <button type="submit" className="btn btn-primary" disabled={uploading}>
+          {uploading ? '⏳ Upload en cours...' : 'Ajouter'}
+        </button>
       </form>
 
       {previewPrice !== null && (
